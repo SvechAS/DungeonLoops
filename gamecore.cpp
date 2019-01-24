@@ -133,18 +133,13 @@ void GameCore::updateActionListLayout()
     for(i = 0; i < currentActionList.size(); i++)
     {
         QLabel *lbl = qobject_cast<QLabel*>(actionListLayout.itemAtPosition(i + 1, 0)->widget());
-        lbl->setText("Building: " + currentActionList.at(i).name + " | Progress: "
-                                  + QString::number(currentActionList.at(i).manaGet) + " / "
-                                  + QString::number(currentActionList.at(i).manaNeed));
+        lbl->setText(currentActionList.at(i).toString());
     }
 }
 
 void GameCore::slotAddToBuildQueue()
 {
     ActionListMember *tmp = new ActionListMember;
-    tmp->name = "Dungeon Core";
-    tmp->manaNeed = 2500;
-    tmp->manaGet = 0;
     currentActionList.enqueue(*tmp);
 
     QLayoutItem *target = actionListLayout.takeAt(actionListLayout.indexOf(actionListLayout.itemAtPosition(oldListSize, 0)));
@@ -160,9 +155,9 @@ void GameCore::buildFromQueue()
 {
     if(!currentActionList.isEmpty())
     {
-        currentActionList.head().manaGet += dungeonStats->spendMana(currentActionList.head().manaNeed -
-                                                                    currentActionList.head().manaGet);
-        if(currentActionList.head().manaGet >= currentActionList.head().manaNeed)
+        auto& task = currentActionList.head();
+        task.manaConsume(dungeonStats->spendMana(task.manaNeeds()));
+        if(task.manaIsFull())
         {
             currentActionList.dequeue();
             QLayoutItem *target = actionListLayout.takeAt(actionListLayout.indexOf(

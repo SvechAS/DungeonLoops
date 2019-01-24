@@ -13,12 +13,15 @@
 #include <QElapsedTimer>
 #include <QQueue>
 #include <QDebug>
+#include <cmath>
 
 #include <dungeonmap.h>
 #include <gametime.h>
 #include <dungeonstats.h>
 #include <timerlabel.h>
 #include <actionbutton.h>
+
+const static double EPS = 0.0000001;
 
 class GameCore : public QWidget
 {
@@ -32,7 +35,29 @@ public:
     {
         QString name;
         double manaNeed;
-        double manaGet;
+        double manaGot;
+
+        ActionListMember() {
+            name = "Dungeon Core";
+            manaNeed = 2500;
+            manaGot = 0;
+        }
+
+        double manaNeeds(){
+            return manaNeed - manaGot;
+        }
+
+        void manaConsume(double mana) {
+            manaGot += mana;
+        }
+
+        bool manaIsFull() {
+            return abs(manaNeeds()) < EPS;
+        }
+
+        QString toString() const {
+            return "Building: " + name + " | Progress: " + QString::number(manaGot) + " / " + QString::number(manaNeed);
+        }
     };
 
 signals:
