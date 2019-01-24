@@ -17,6 +17,7 @@
 #include <dungeonmap.h>
 #include <gametime.h>
 #include <dungeonstats.h>
+#include <timerlabel.h>
 
 class GameCore : public QWidget
 {
@@ -38,7 +39,6 @@ signals:
 
 private slots:
     void slotAlarmTickTimer();
-    void slotButtonBoostClicked();
     void slotButtonInActionListClicked();
     void slotAddToBuildQueue();
 
@@ -61,15 +61,13 @@ private:
     DungeonMap     *dungeonMap;
     DungeonStats   *dungeonStats;
 
-    GameTime        gameTime;
-    QTimer          tickTimer;
-    QElapsedTimer   elapsedTime;
-
     long long lastTime = 0;
     int       timeSpeed = 1;
     int       oldListSize = 1;
 
     QQueue<ActionListMember> currentActionList;
+
+    TimerLabel timerLabel;
 };
 
 #endif // GAMECORE_H

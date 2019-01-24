@@ -1,7 +1,7 @@
 #include "gamecore.h"
 
 GameCore::GameCore(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), timerLabel(this)
 {
     initForm();
     createMapLayout();
@@ -31,34 +31,8 @@ void GameCore::initForm()
 
 void GameCore::createTimeLayout()
 {
-    QGridLayout *grid = new QGridLayout();
-
-    {
-        timeLabel.setText(gameTime.getTimeStr());
-        timeLabel.setFixedWidth(300);
-        grid->addWidget(&timeLabel, 0, 0, Qt::AlignLeft);
-    }
-
-    int boostSizes[7] = {20, 20, 30, 30, 35, 40, 45};
-    QString boostNames[7] = {"X1", "X5", "X10", "X50", "X100", "X1000", "X10000"};
-    for(int i = 0; i < 7; i++)
-    {
-        QPushButton *pbt = new QPushButton(this);
-        pbt->setText(boostNames[i]);
-        pbt->setFixedSize(boostSizes[i], 20);
-        pbt->setObjectName(boostNames[i]);
-        connect(pbt, SIGNAL(clicked()), this, SLOT(slotButtonBoostClicked()));
-        grid->addWidget(pbt, 0, i + 1);
-    }
-
-    gameLayout.addLayout(grid, 0, 0, 1, 4, Qt::AlignLeft);
-
-    tickTimer.setInterval(50);
-    connect(&tickTimer, SIGNAL(timeout()), this, SLOT(slotAlarmTickTimer()));
-
-    elapsedTime.start();
-    tickTimer.start();
-    lastTime = elapsedTime.elapsed();
+    connect(&(timerLabel.tickTimer), SIGNAL(timeout()), this, SLOT(slotAlarmTickTimer()));
+    gameLayout.addLayout(timerLabel.layout, 0, 0, 1, 4, Qt::AlignLeft);
 }
 
 void GameCore::createMapLayout()
@@ -215,12 +189,7 @@ void GameCore::buildFromQueue()
 
 void GameCore::slotAlarmTickTimer()
 {
-    long long timeGone = elapsedTime.elapsed() - lastTime;
-    gameTime.timeTick(int(timeGone * timeSpeed));
-    lastTime += timeGone;
-    timeLabel.setText(gameTime.getTimeStr());
-
-    long long timeElapsed = gameTime.getTimeElapsed();
+    long long timeElapsed = timerLabel.timeElapsed();
     dungeonStats->timePassed(timeElapsed);
     dungeonStats->updateStatsLabels();
     dungeonMap->updateScene();
@@ -236,15 +205,4 @@ void GameCore::slotButtonInActionListClicked()
         btn->setEnabled(false);
         dungeonMap->startPlaning();
     }
-}
-
-void GameCore::slotButtonBoostClicked()
-{
-    int boostSpeeds[7] = {1, 5, 10, 50, 100, 1000, 10000};
-    QString boostNames[7] = {"X1", "X5", "X10", "X50", "X100", "X1000", "X10000"};
-    QString str = sender()->objectName();
-    for(int i = 0; i < 7; i++)
-        if(str == boostNames[i])
-            timeSpeed = boostSpeeds[i];
-    lastTime = elapsedTime.elapsed();
 }
