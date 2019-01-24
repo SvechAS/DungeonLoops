@@ -29,13 +29,15 @@ SOURCES += \
         dungeonmap.cpp \
     gamecore.cpp \
     gametime.cpp \
-    dungeonstats.cpp
+    dungeonstats.cpp \
+    actionbutton.cpp
 
 HEADERS += \
         dungeonmap.h \
     gamecore.h \
     gametime.h \
-    dungeonstats.h
+    dungeonstats.h \
+    actionbutton.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

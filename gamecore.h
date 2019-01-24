@@ -17,6 +17,7 @@
 #include <dungeonmap.h>
 #include <gametime.h>
 #include <dungeonstats.h>
+#include <actionbutton.h>
 
 class GameCore : public QWidget
 {

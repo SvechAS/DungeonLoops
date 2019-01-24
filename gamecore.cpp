@@ -117,13 +117,7 @@ void GameCore::createActionsLayout()
         grid->addWidget(lbl, 0, 0, Qt::AlignCenter);
     }
 
-    {
-        QPushButton *btn = new QPushButton(this);
-        btn->setText("Create dungeon core");
-        btn->setObjectName("DungeonCoreButton");
-        connect(btn, SIGNAL(clicked()), this, SLOT(slotButtonInActionListClicked()));
-        grid->addWidget(btn, 1, 0, Qt::AlignCenter);
-    }
+    grid->addWidget(new ActionButton(this, "DungeonCoreButton", "Create dungeon core"), 1, 0, Qt::AlignCenter);
 
     {
         QSpacerItem *spe = new QSpacerItem(200, this->height());
@@ -230,7 +224,7 @@ void GameCore::slotAlarmTickTimer()
 
 void GameCore::slotButtonInActionListClicked()
 {
-    QPushButton *btn = qobject_cast<QPushButton*>(sender());
+    ActionButton *btn = qobject_cast<ActionButton*>(sender());
     if(sender()->objectName() == "DungeonCoreButton")
     {
         btn->setEnabled(false);
