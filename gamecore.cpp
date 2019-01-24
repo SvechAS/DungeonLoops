@@ -31,8 +31,8 @@ void GameCore::initForm()
 
 void GameCore::createTimeLayout()
 {
-    connect(&(timerLabel.tickTimer), SIGNAL(timeout()), this, SLOT(slotAlarmTickTimer()));
-    gameLayout.addLayout(timerLabel.layout, 0, 0, 1, 4, Qt::AlignLeft);
+    timerLabel.onTickConnect(this, SLOT(slotAlarmTickTimer()));
+    gameLayout.addLayout(timerLabel.layout(), 0, 0, 1, 4, Qt::AlignLeft);
 }
 
 void GameCore::createMapLayout()

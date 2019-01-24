@@ -12,7 +12,8 @@
 
 #include <gametime.h>
 
-static const int TICK_INTERVAL = 50;
+const static int TICK_INTERVAL = 50;
+const static int SPEEDS_OF_TIME[7] = {1, 5, 10, 50, 100, 1000, 10000};
 
 class TimerLabel : public QWidget
 {
@@ -22,26 +23,29 @@ public:
     explicit TimerLabel(QWidget *parent = nullptr);
     ~TimerLabel();
 
+    QLayout* layout();
     long long timeElapsed();
-
-    QBoxLayout *layout;
-    QLabel     timeLabel;
-    QTimer          tickTimer;
-    QSignalMapper mapper;
-
-signals:
-    void buttonClick(int speedUp);
-private slots:
-    void slotButtonBoostClicked(int speedUp);
+    void onTickConnect(QWidget* ptr, const char* slot);
 
 private:
     void initForm();
+    void initTimers();
 
-    GameTime        gameTime;
-    QString boostNames[7] = {"X1", "X5", "X10", "X50", "X100", "X1000", "X10000"};
-    long long lastTime = 0;
-    int timeSpeed = 1;
+    GameTime        gameClock;
+    long long lastTickTime = 0;
+    int currTimeSpeed = 1;
+
+    //layout
+    QBoxLayout *layoutPtr;
+    QLabel     timeLabel;
+    //timers
+    QTimer          tickTimer;
     QElapsedTimer   elapsedTime;
+    // signals
+    QSignalMapper mapper;
+
+private slots:
+    void slotButtonSetNewTimeSpeed(int newTimeSpeed);
 };
 
 #endif // TIMERLABEL_H
