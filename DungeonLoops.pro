@@ -30,14 +30,16 @@ SOURCES += \
     gamecore.cpp \
     gametime.cpp \
     dungeonstats.cpp \
-    timerlabel.cpp
+    timerlabel.cpp \
+    actionbutton.cpp
 
 HEADERS += \
         dungeonmap.h \
     gamecore.h \
     gametime.h \
     dungeonstats.h \
-    timerlabel.h
+    timerlabel.h \
+    actionbutton.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
